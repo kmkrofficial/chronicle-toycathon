@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="https://kit.fontawesome.com/e41c237a28.js" crossorigin="anonymous"></script>
+    <title>Quiz</title>
+    <style>
+     a {
+            color: black;
+            text-decoration: none;
+
+        }
+
+        a:hover {
+            color: wheat;
+            text-decoration: none;
+        }
+
+        .st {
+            position: absolute;
+        }
+
+        .body {
+            font-family: sans-serif;
+        }
+
+        .navbar {
+            display: inline-block;
+            width: 100%;
+            padding-top: 5px;
+            padding-bottom: 15px;
+        }
+
+        .user_icon_shell {
+            float: right;
+            font-weight: bold;
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+        .avatar {
+            vertical-align: middle;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+        }
+
+        .quiz_body {
+            margin-top: 8%;
+            position: absolute;
+            display: inline-flex;
+            width: 100%;
+            font-weight: bold;
+
+        }
+
+        .pic {
+            height: 500px;
+            width: 1000px;
+            border-radius: 25px;
+        }
+
+        .quiz_pic {
+            float: right;
+            width: auto;
+            padding-right: 20px;
+        }
+
+        .quiz_qn {
+            height: 30px;
+            position: relative;
+            width: 60%;
+            padding: 20px;
+            margin: 3px;
+            border-radius: 25px;
+            border: 0.1px solid rgb(216, 216, 216);
+        }
+
+        .quiz_qns {
+            color: rgb(255, 255, 255);
+            display: flex;
+            flex-direction: column;
+            text-align: center;
+            justify-content: center;
+            align-items: center;
+            width: 50%;
+            border-radius: 25px;
+        }
+
+        html,
+        body {
+            padding: 0px;
+            margin: 0px;
+            overflow: hidden;
+        }
+
+        canvas {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+        }
+
+        /* .btn {
+    margin-top: 20px !important;
+    cursor: pointer;
+}
+
+.btn::after, .btn::before {
+    border: 2px solid #000;
+    content: "";
+    position: absolute;
+    width: 100%;
+    border-radius: 25px;
+    height: calc(100% - 6px);
+    left: 0;
+    bottom: 0;
+    z-index: -1;
+    transition: transform 0.3s ease;
+}
+
+.btn:hover::after {
+    transform: translate(-3px, -3px);
+}
+
+.btn:hover::before {
+    transform: translate(3px, 3px);
+} */
+
+        .btn::before {
+            transform: scaleX(0);
+            transform-origin: bottom right;
+        }
+
+        .btn:hover::before {
+            transform: scaleX(1);
+            transform-origin: bottom left;
+        }
+
+        .btn:hover {
+            color: black;
+        }
+
+        .btn::before {
+            content: "";
+            display: block;
+            position: absolute;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            left: 0;
+            inset: 0 0 0 0;
+            background: #8f94fb;
+            z-index: -1;
+            transition: transform 0.3s ease;
+            border-radius: 25px;
+            border: 5px;
+            border-color: black;
+        }
+
+
+        @import url('https://fonts.googleapis.com/css?family=Exo:400,700');
+
+        * {
+            margin: 0px;
+            padding: 0px;
+        }
+
+        body {
+            font-family: 'Exo', sans-serif;
+        }
+
+        .zoom {
+            transition: 0.3s ease;
+        }
+
+        .zoom:hover {
+            transform: scale(1.05);
+            /* (150% zoom - Note: if the zoom is too large, it will go outside of the viewport) */
+        }
+
+        .context {
+            width: 100%;
+            position: absolute;
+            top: 100px;
+            text-align: center;
+            color: white;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center
+        }
+
+        .context h1 {
+            color: #fff;
+            font-size: 50px;
+        }
+
+        .context small {
+            text-align: center;
+            color: #fff;
+        }
+
+        .context button {
+            color: black;
+            border-radius: 6px;
+            background-color: #ACDDDE;
+            width: 100px;
+            height: 30px;
+        }
+
+        .context input {
+            text-align: center;
+            width: 400px;
+        }
+
+        .area {
+            position: absolute;
+            background: #4e54c8;
+            background: -webkit-linear-gradient(to left, #8f94fb, #4e54c8);
+            width: 100%;
+            height: 100vh;
+            z-index: -1;
+
+        }
+
+        .circles {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+        }
+
+        .circles li {
+            position: absolute;
+            display: block;
+            list-style: none;
+            width: 20px;
+            height: 20px;
+            background: rgba(255, 255, 255, 0.2);
+            animation: animate 25s linear infinite;
+            bottom: -150px;
+
+        }
+
+        .circles li:nth-child(1) {
+            left: 25%;
+            width: 80px;
+            height: 80px;
+            animation-delay: 0s;
+        }
+
+
+        .circles li:nth-child(2) {
+            left: 10%;
+            width: 20px;
+            height: 20px;
+            animation-delay: 2s;
+            animation-duration: 12s;
+        }
+
+        .circles li:nth-child(3) {
+            left: 70%;
+            width: 20px;
+            height: 20px;
+            animation-delay: 4s;
+        }
+
+        .circles li:nth-child(4) {
+            left: 40%;
+            width: 60px;
+            height: 60px;
+            animation-delay: 0s;
+            animation-duration: 18s;
+        }
+
+        .circles li:nth-child(5) {
+            left: 65%;
+            width: 20px;
+            height: 20px;
+            animation-delay: 0s;
+        }
+
+        .circles li:nth-child(6) {
+            left: 75%;
+            width: 110px;
+            height: 110px;
+            animation-delay: 3s;
+        }
+
+        .circles li:nth-child(7) {
+            left: 35%;
+            width: 150px;
+            height: 150px;
+            animation-delay: 7s;
+        }
+
+        .circles li:nth-child(8) {
+            left: 50%;
+            width: 25px;
+            height: 25px;
+            animation-delay: 15s;
+            animation-duration: 45s;
+        }
+
+        .circles li:nth-child(9) {
+            left: 20%;
+            width: 15px;
+            height: 15px;
+            animation-delay: 2s;
+            animation-duration: 35s;
+        }
+
+        .circles li:nth-child(10) {
+            left: 85%;
+            width: 150px;
+            height: 150px;
+            animation-delay: 0s;
+            animation-duration: 11s;
+        }
+
+        .header {
+            width: 100%;
+            padding-bottom: 10px;
+            text-align: center;
+        }
+
+        body {
+            background-color: #DFE8EE;
+        }
+
+        .butn {
+            padding-top: 30px;
+            text-align: center;
+            padding-left: 70px;
+            padding-right: 70px;
+        }
+
+        i {
+            padding: 10px;
+        }
+
+        video {
+            padding-bottom: 20px;
+        }
+
+
+        @keyframes animate {
+
+            0% {
+                transform: translateY(0) rotate(0deg);
+                opacity: 1;
+                border-radius: 0;
+            }
+
+            100% {
+                transform: translateY(-1000px) rotate(720deg);
+                opacity: 0;
+                border-radius: 50%;
+            }
+
+        }
+    </style>
+</head>
+
+<body>
+    <div class="area">
+        <ul class="circles">
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+        </ul>
+    </div>
+    <div class="quiz_body">
+        <div class="quiz_qns">
+            <div class="quiz_qn">{{ quizObj.question }}</div>
+            <div class="quiz_qn btn"><a href="{% url 'quiz1' %}?answer={{ quizObj.choice1 }}&qid={{ quizObj.id }}&crt={{ quizObj.answer }}">{{ quizObj.choice1 }}</a></div>
+            <div class="quiz_qn btn"><a href="{% url 'quiz1' %}?answer={{ quizObj.choice2 }}&qid={{ quizObj.id }}&crt={{ quizObj.answer }}">{{ quizObj.choice2 }}</a></div>
+            <div class="quiz_qn btn"><a href="{% url 'quiz1' %}?answer={{ quizObj.choice3 }}&qid={{ quizObj.id }}&crt={{ quizObj.answer }}">{{ quizObj.choice3 }}</a></div>
+            <div class="quiz_qn btn"><a href="{% url 'quiz1' %}?answer={{ quizObj.choice4 }}&qid={{ quizObj.id }}&crt={{ quizObj.answer }}">{{ quizObj.choice4 }}</a></div>
+        </div>
+        <div class="quiz_pic zoom">
+            <img class="pic" src="{{ quizObj.image.url }}" alt="quiz_pic">
+        </div>
+    </div>
+</body>
+
+</html>
